@@ -1,0 +1,3 @@
+- Install a local go tool: go get -tool github.com/air-verse/air@latest
+- See a list of tools: go tool
+- Run a tool installed locally: go tool <name>
