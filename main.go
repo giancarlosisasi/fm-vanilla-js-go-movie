@@ -1,13 +1,17 @@
 package main
 
 import (
+	"database/sql"
 	"fm-go-vanillajs-movies/handlers"
 	"fm-go-vanillajs-movies/logger"
 	"log"
 	"net/http"
+	"os"
 
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
+	// _ "github.com/golang-migrate/migrate/v4/database/postgres"
+	// _ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -20,6 +24,22 @@ func main() {
 	// 	logInstance.Error("Error to run migrations: ", err)
 	// 	panic("error to run migrations")
 	// }
+
+	// Load environment variables
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("No .env file was available")
+	}
+
+	// connect to the db
+	dbConnStr := os.Getenv("DATABASE_URL")
+	if dbConnStr == "" {
+		log.Fatal("DATABASE_URL not set")
+	}
+	db, err := sql.Open("postgres", dbConnStr)
+	if err != nil {
+		log.Fatalf("Failed to connect to the DB: %v", err)
+	}
+	defer db.Close()
 
 	// handlers
 	movieHandler := handlers.NewMovieHandlers(logInstance)
@@ -34,7 +54,7 @@ func main() {
 
 	const addr = ":8080"
 	logInstance.Info("Server starting on" + addr)
-	err := http.ListenAndServe(addr, nil)
+	err = http.ListenAndServe(addr, nil)
 	if err != nil {
 		logInstance.Error("Server failed to start", err)
 		log.Fatalf("Server has failed: %v", err)

@@ -2,17 +2,17 @@ package models
 
 type Movie struct {
 	ID          int      `json:"id"`
-	TMDB_ID     int      `json:"tmdb_id"`
+	TMDB_ID     int      `json:"tmdb_id,omitempty"`
 	Title       string   `json:"title"`
-	Tagline     string   `json:"tag_line"`
+	Tagline     string   `json:"tag_line,omitempty"`
 	ReleaseYear int      `json:"release_year"`
 	Genres      []Genre  `json:"genres"`
-	Overview    *string  `json:"overview"`
-	Score       *float32 `json:"score"`
-	Popularity  *float32 `json:"popularity"`
+	Overview    *string  `json:"overview,omitempty"`
+	Score       *float32 `json:"score,omitempty"`
+	Popularity  *float32 `json:"popularity,omitempty"`
 	Keywords    []string `json:"keywords"`
-	Language    *string  `json:"languages"`
-	PosterURL   *string  `json:"poster_url"`
-	TrailerURL  *string  `json:"trailer_url"`
+	Language    *string  `json:"languages,omitempty"`
+	PosterURL   *string  `json:"poster_url,omitempty"`
+	TrailerURL  *string  `json:"trailer_url,omitempty"`
 	Casting     []Actor  `json:"casting"`
 }
