@@ -1,0 +1,29 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "sql/"
+    schema: "migrations/"
+    gen:
+      go:
+        package: "database"
+        out: "database"
+        overrides:
+          # UUID
+          - db_type: "uuid"
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+          - db_type: "uuid"
+            nullable: true
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+              pointer: true
+          - db_type: "pg_catalog.timestamp"
+            nullable: true
+            go_type:
+              import: "time"
+              type: "Time"
+              pointer: true
+          - db_type: "pg_catalog.timestamp"
+            go_type: "time.Time"

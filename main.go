@@ -5,11 +5,21 @@ import (
 	"fm-go-vanillajs-movies/logger"
 	"log"
 	"net/http"
+
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func main() {
 	// Initialize logger
 	logInstance := initializeLogger()
+
+	// migrations
+	// err := runMigrations(logInstance)
+	// if err != nil {
+	// 	logInstance.Error("Error to run migrations: ", err)
+	// 	panic("error to run migrations")
+	// }
 
 	// handlers
 	movieHandler := handlers.NewMovieHandlers(logInstance)
@@ -41,3 +51,22 @@ func initializeLogger() *logger.Logger {
 
 	return logInstance
 }
+
+// func runMigrations(logger *logger.Logger) error {
+// 	m, err := migrate.New(
+// 		"file://migrations",
+// 		"postgres://postgres:postgres@localhost:5433/movies_db?sslmode=disable",
+// 	)
+
+// 	if err != nil {
+// 		logger.Error("Error to initialize the migrate tool: ", err)
+// 		return err
+// 	}
+
+// 	if err := m.Up(); err != nil {
+// 		logger.Error("Error to run the migrations up: ", err)
+// 		return err
+// 	}
+
+// 	return nil
+// }
