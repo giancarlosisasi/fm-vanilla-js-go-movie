@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fm-go-vanillajs-movies/data"
 	"fm-go-vanillajs-movies/logger"
-	"fm-go-vanillajs-movies/models"
 	"fmt"
 	"net/http"
 )
@@ -22,8 +21,8 @@ func NewMovieHandlers(logger *logger.Logger, storage data.MovieStorage) *MovieHa
 func (mh *MovieHandlers) GetTopMovies(w http.ResponseWriter, r *http.Request) {
 	movies, err := mh.storage.GetTopMovies()
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Internal error getting top movies: %v", err), 500)
 		mh.logger.Error("Get top movies error", err)
+		http.Error(w, fmt.Sprintf("Internal error getting top movies: %v", err), 500)
 		return
 	}
 
@@ -31,16 +30,11 @@ func (mh *MovieHandlers) GetTopMovies(w http.ResponseWriter, r *http.Request) {
 }
 
 func (mh *MovieHandlers) GetRandomMovies(w http.ResponseWriter, r *http.Request) {
-	movies := []models.Movie{
-		{
-			ID:          1,
-			TMDB_ID:     181,
-			Title:       "The hacker",
-			ReleaseYear: 1984,
-			Genres:      []models.Genre{{ID: 1, Name: "Thriller"}},
-			Keywords:    []string{},
-			Casting:     []models.Actor{{ID: 1, FirstName: "Max"}},
-		},
+	movies, err := mh.storage.GetRandomMovies()
+	if err != nil {
+		mh.logger.Error("Get random movies: ", err)
+		http.Error(w, "Error getting random movies", 500)
+		return
 	}
 
 	mh.writeJSONResponse(w, movies)
