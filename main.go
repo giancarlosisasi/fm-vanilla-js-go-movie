@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fm-go-vanillajs-movies/data"
 	"fm-go-vanillajs-movies/handlers"
 	"fm-go-vanillajs-movies/logger"
 	"log"
@@ -41,8 +42,14 @@ func main() {
 	}
 	defer db.Close()
 
+	// repositories
+	movieRepo, err := data.NewMovieRepository(db, logInstance)
+	if err != nil {
+		log.Fatalf("Failed to initialize the movie repository: %v", err)
+	}
+
 	// handlers
-	movieHandler := handlers.NewMovieHandlers(logInstance)
+	movieHandler := handlers.NewMovieHandlers(logInstance, movieRepo)
 
 	// endpoints
 	http.HandleFunc("/api/movies/top", movieHandler.GetTopMovies)
